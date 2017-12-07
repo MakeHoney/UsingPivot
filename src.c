@@ -10,7 +10,7 @@ typedef struct
 	char phoneNumber[15];
 } member_t;
 
-member_t* buffer[100001];
+member_t* buffer[100001]; //use this buffer if you need :D
 
 
 void Swap(member_t** members, int idx1, int idx2) {
@@ -36,25 +36,26 @@ int membercmp(const member_t * m1, const member_t * m2)
 }
 
 int Partition(member_t** members, int left, int right) {
-	char pivot[21];
-	strcpy(pivot, members[left]->name);
+	member_t* pivot = (member_t*)malloc(sizeof(member_t));
+	strcpy(pivot->name, members[left]->name);
+	strcpy(pivot->phoneNumber, members[left]->phoneNumber);
+
 	int low = left + 1;
 	int high = right;
-	printf("%s\n", members[high]->name);
+
 	while (low <= high) {
-		printf("cc");
-		while (strcmp(pivot, members[low]->name) >= 0 && low <= right) {
-			printf("dd");
+		while (membercmp(pivot, members[low]) >= 0 && low <= right) {
 			low++;
+			if (low > right)
+				break;
 		}
-		while (strcmp(pivot, members[high]->name) <= 0 && high >= (left + 1)) {
-			printf("ee");
+		while (membercmp(pivot, members[high]) <= 0 && high >= (left + 1)) {
 			high--;
+			if (high < left + 1)
+				break;
 		}
-		printf("akjkljkljkljkljklklaa\n");
 		if (low <= high)
 			Swap(members, low, high);
-		printf("flag\n");
 	}
 
 	Swap(members, left, high);
@@ -64,12 +65,14 @@ int Partition(member_t** members, int left, int right) {
 void sort_member(member_t ** members, int left, int right)
 {
 	if (left <= right) {
-		printf("bb");
 		int pivotIdx = Partition(members, left, right);
 		sort_member(members, left, pivotIdx - 1);
 		sort_member(members, pivotIdx + 1, right);
 	}
 }
+
+
+
 
 
 
